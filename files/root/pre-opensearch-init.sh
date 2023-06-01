@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 echo " "
-echo -e "\e[1;37m Installing logstash-output-opensearchplugin ...\e[0m"
+echo -e "\e[1;37m Installing logstash-output-opensearch plugin ...\e[0m"
 echo " "
 
 cd /usr/local/logstash/bin; sh -c "JAVA_HOME=/usr/local/openjdk11 ./logstash-plugin install logstash-output-opensearch"
