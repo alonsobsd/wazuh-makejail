@@ -17,17 +17,18 @@ COPY files/usr/local/etc/logstash/logstash.conf /usr/local/etc/logstash/
 COPY files/usr/local/etc/opensearch/opensearch.yml /usr/local/etc/opensearch/opensearch.yml
 COPY files/usr/local/etc/opensearch-dashboards/opensearch_dashboards.yml /usr/local/etc/opensearch-dashboards/
 COPY files/etc/hosts /etc/
-COPY files/root/bootstrap.sh /root/
+COPY files/root/pre-opensearch-init.sh /root/
+COPY files/root/post-opensearch-init.sh /root/
 
 REPLACE /usr/local/etc/beats/filebeat.yml SERVER_IP ${server_ip}
 REPLACE /usr/local/etc/logstash/logstash.conf SERVER_IP ${server_ip}
 REPLACE /usr/local/etc/opensearch/opensearch.yml SERVER_IP ${server_ip}
 REPLACE /usr/local/etc/opensearch-dashboards/opensearch_dashboards.yml SERVER_IP ${server_ip}
 REPLACE /etc/hosts SERVER_IP ${server_ip}
-REPLACE /root/bootstrap.sh SERVER_IP ${server_ip}
+REPLACE /root/post-opensearch-init.sh SERVER_IP ${server_ip}
 
-CMD cd /usr/local/logstash/bin; sh -c "JAVA_HOME=/usr/local/openjdk11 ./logstash-plugin install logstash-output-opensearch"
-CMD cd /usr/local/etc/opensearch/opensearch-security; sh -c 'for i in $(ls *.sample ) ; do cp -p ${i} $(echo ${i} | sed "s|.sample||g") ; done'
+CMD sh /root/pre-opensearch-init.sh
+CMD rm /root/pre-opensearch-init.sh
 
 CMD mkdir -p /usr/local/etc/opensearch-dashboards/certs/
 CMD mkdir -p /usr/local/etc/opensearch/certs/
@@ -76,8 +77,8 @@ SYSRC opensearch_dashboards_syslog_output_enable=YES
 
 SERVICE opensearch start
 
-CMD sh /root/bootstrap.sh
-CMD rm /root/bootstrap.sh
+CMD sh /root/post-opensearch-init.sh
+CMD rm /root/post-opensearch-init.sh
 
 SERVICE wazuh-manager start
 SERVICE filebeat start
