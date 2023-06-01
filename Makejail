@@ -3,6 +3,8 @@ INCLUDE options/options.makejail
 ARG server_ip=10.0.0.2
 ARG network=wazuh-net
 
+CMD sed -e "s,quarterly,latest,g" -i "" /etc/pkg/FreeBSD.conf
+
 PKG bash wazuh-indexer wazuh-server wazuh-dashboard
 
 CMD openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=California/CN=Wazuh/" -keyout /var/ossec/etc/sslmanager.key -out /var/ossec/etc/sslmanager.cert
