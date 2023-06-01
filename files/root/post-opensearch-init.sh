@@ -21,7 +21,7 @@ sed -e "s,${kibanaoldhash},${kibananewhash},g" -i "" /usr/local/etc/opensearch/o
 sed -e "s,%%OPENSEARCH_ADMIN_PASS%%,${adminpass},g" -i "" /usr/local/etc/logstash/logstash.conf
 sed -e "s,%%OPENSEARCH_ADMIN_PASS%%,${adminpass},g" -i "" /usr/local/etc/opensearch-dashboards/opensearch_dashboards.yml
 
-sh -c "OPENSEARCH_JAVA_HOME=/usr/local/openjdk11 bash /usr/local/lib/opensearch/plugins/opensearch-security/tools/securityadmin.sh -cd /usr/local/etc/opensearch/opensearch-security/ -cacert /usr/local/etc/opensearch/certs/root-ca.pem -cert /usr/local/etc/opensearch/certs/admin.pem -key /usr/local/etc/opensearch/certs/admin-key.pem -h %{SERVER_IP}% -p 9200 -icl -nhnv"
+sh -c "OPENSEARCH_JAVA_HOME=/usr/local/openjdk11 bash /usr/local/lib/opensearch/plugins/opensearch-security/tools/securityadmin.sh -cd /usr/local/etc/opensearch/opensearch-security/ -cacert /usr/local/etc/opensearch/certs/root-ca.pem -cert /usr/local/etc/opensearch/certs/admin.pem -key /usr/local/etc/opensearch/certs/admin-key.pem -h %{SERVER_IP} -p 9200 -icl -nhnv"
 
 echo " "
 echo -e "\e[1;37m ################################################ \e[0m"
