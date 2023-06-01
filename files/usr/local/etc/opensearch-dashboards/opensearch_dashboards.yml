@@ -1,0 +1,22 @@
+#
+# OpenSearch Dashboard configuration for work like a Wazuh Dashboard Server
+#
+
+server.port: 5601
+#server.port: 443
+server.host: "%{SERVER_IP}"
+opensearch.hosts: ["https://localhost:9200"]
+opensearch.username: "admin"
+opensearch.password: "%%OPENSEARCH_ADMIN_PASS%%"
+
+server.ssl.enabled: true
+server.ssl.certificate: "/usr/local/etc/opensearch-dashboards/certs/dashboard.pem"
+server.ssl.key: "/usr/local/etc/opensearch-dashboards/certs/dashboard-key.pem"
+
+opensearch.ssl.certificateAuthorities: [ "/usr/local/etc/opensearch-dashboards/certs/root-ca.pem" ]
+opensearch.ssl.verificationMode: certificate
+opensearch.requestHeadersWhitelist: [authorization, securitytenant]
+opensearch_security.multitenancy.enabled: false
+opensearch_security.readonly_mode.roles: [kibana_read_only]
+
+uiSettings.overrides.defaultRoute: /app/wazuh

@@ -1,0 +1,85 @@
+INCLUDE options/options.makejail
+
+ARG server_ip=10.0.0.1
+ARG network=wazuhnet
+
+PKG bash wazuh-indexer wazuh-server wazuh-dashboard
+
+CMD openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=California/CN=Wazuh/" -keyout /var/ossec/etc/sslmanager.key -out /var/ossec/etc/sslmanager.cert
+CMD chmod 640 /var/ossec/etc/sslmanager.key
+CMD chmod 640 /var/ossec/etc/sslmanager.cert
+
+CMD cp /etc/localtime /var/ossec/etc
+CMD cp /usr/local/etc/wazuh-server/wazuh-template.json /usr/local/etc/logstash/
+COPY files/var/ossec/etc/ossec.conf /var/ossec/etc
+COPY files/usr/local/etc/beats/filebeat.yml /usr/local/etc/beats/
+COPY files/usr/local/etc/logstash/logstash.conf /usr/local/etc/logstash/
+COPY files/usr/local/etc/opensearch/opensearch.yml /usr/local/etc/opensearch/opensearch.yml
+COPY files/usr/local/etc/opensearch-dashboards/opensearch_dashboards.yml /usr/local/etc/opensearch-dashboards/
+COPY files/etc/hosts /etc/
+COPY files/root/bootstrap.sh /root/
+
+REPLACE /usr/local/etc/beats/filebeat.yml SERVER_IP ${server_ip}
+REPLACE /usr/local/etc/logstash/logstash.conf SERVER_IP ${server_ip}
+REPLACE /usr/local/etc/opensearch/opensearch.yml SERVER_IP ${server_ip}
+REPLACE /usr/local/etc/opensearch-dashboards/opensearch_dashboards.yml SERVER_IP ${server_ip}
+REPLACE /etc/hosts SERVER_IP ${server_ip}
+REPLACE /root/bootstrap.sh SERVER_IP ${server_ip}
+
+CMD cd /usr/local/logstash/bin; sh -c 'JAVA_HOME=/usr/local/openjdk11 ./logstash-plugin install logstash-output-opensearch'
+CMD cd /usr/local/etc/opensearch/opensearch-security; sh -c 'for i in $(ls *.sample ) ; do cp -p ${i} $(echo ${i} | sed "s|.sample||g") ; done'
+
+CMD mkdir -p /usr/local/etc/opensearch-dashboards/certs/
+CMD mkdir -p /usr/local/etc/opensearch/certs/
+CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/wazuh-gen-certs.tar.gz"
+CMD cd /root/; tar xvfz wazuh-gen-certs.tar.gz
+CMD echo 'dashboard_ip="${_server_ip}"' > /root/wazuh-gen-certs/dashboard.lst
+CMD echo 'indexer1_ip="${_server_ip}"' > /root/wazuh-gen-certs/indexer.lst
+CMD echo 'server1_ip="${_server_ip}"' > /root/wazuh-gen-certs/server.lst
+CMD cd /root/wazuh-gen-certs; echo y | sh gen-certs.sh
+
+CMD chmod 660 /var/ossec/etc/ossec.conf
+CMD chown root:wazuh /var/ossec/etc/ossec.conf
+
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/admin.pem /usr/local/etc/opensearch/certs/
+CMD chmod 640 /usr/local/etc/opensearch/certs/admin.pem
+CMD chown opensearch:opensearch /usr/local/etc/opensearch/certs/admin.pem
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/admin-key.pem /usr/local/etc/opensearch/certs/
+CMD chmod 640 /usr/local/etc/opensearch/certs/admin-key.pem
+CMD chown opensearch:opensearch /usr/local/etc/opensearch/certs/admin-key.pem
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/indexer1.pem /usr/local/etc/opensearch/certs/
+CMD chmod 640 /usr/local/etc/opensearch/certs/indexer1.pem
+CMD chown opensearch:opensearch /usr/local/etc/opensearch/certs/indexer1.pem
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/indexer1-key.pem /usr/local/etc/opensearch/certs/
+CMD chmod 640 /usr/local/etc/opensearch/certs/indexer1-key.pem
+CMD chown opensearch:opensearch /usr/local/etc/opensearch/certs/indexer1-key.pem
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/root-ca.pem /usr/local/etc/opensearch/certs/
+CMD chmod 640 /usr/local/etc/opensearch/certs/root-ca.pem
+CMD chown opensearch:opensearch /usr/local/etc/opensearch/certs/root-ca.pem
+
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/dashboard.pem /usr/local/etc/opensearch-dashboards/certs/
+CMD chmod 640 /usr/local/etc/opensearch-dashboards/certs/dashboard.pem
+CMD chown www:www /usr/local/etc/opensearch-dashboards/certs/dashboard.pem
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/dashboard-key.pem /usr/local/etc/opensearch-dashboards/certs/
+CMD chmod 640 /usr/local/etc/opensearch-dashboards/certs/dashboard-key.pem
+CMD chown www:www /usr/local/etc/opensearch-dashboards/certs/dashboard-key.pem
+CMD cp /root/wazuh-gen-certs/wazuh-certificates/root-ca.pem /usr/local/etc/opensearch-dashboards/certs/
+CMD chmod 640 /usr/local/etc/opensearch-dashboards/certs/root-ca.pem
+CMD chown www:www /usr/local/etc/opensearch-dashboards/certs/root-ca.pem
+
+SYSRC wazuh_manager_enable=YES
+SYSRC filebeat_enable=YES
+SYSRC logstash_enable=YES
+SYSRC opensearch_enable=YES
+SYSRC opensearch_dashboards_enable=YES
+SYSRC opensearch_dashboards_syslog_output_enable=YES
+
+SERVICE opensearch start
+
+CMD sh /root/bootstrap.sh
+CMD rm /root/bootstrap.sh
+
+SERVICE wazuh-manager start
+SERVICE filebeat start
+SERVICE logstash start
+SERVICE opensearch-dashboards start

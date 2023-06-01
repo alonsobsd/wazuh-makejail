@@ -1,0 +1,10 @@
+OPTION template=files/template.conf
+OPTION resolv_conf
+OPTION tzdata
+OPTION overwrite
+OPTION virtualnet=${network}:wazuh address:${server_ip}
+OPTION expose=1514:1514 network:${network} proto:udp
+OPTION expose=1515:1515 network:${network} proto:tcp
+OPTION expose=5601:5601 network:${network} proto:tcp
+OPTION expose=55000:55000 network:${network} proto:tcp
+OPTION start

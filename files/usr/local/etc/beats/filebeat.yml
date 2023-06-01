@@ -1,0 +1,53 @@
+#
+# Filebeat configuration for forwading events from Wazuh Manager to Logstash
+#
+
+output.logstash:
+  hosts: ["%{SERVER_IP}:5044"]
+#  hosts: ["127.0.0.1:5044"]
+#  ssl.certificate_authorities: ["/usr/local/etc/beats/certs/root-ca.pem"]
+#  ssl.certificate: "/usr/local/etc/beats/certs/filebeat.pem"
+#  ssl.key: "/usr/local/etc/beats/certs/filebeat-key.pem"
+
+#filebeat.inputs:
+# - type: filestream
+#   enabled: true
+#   id: wazuh-alerts.json
+#   paths:
+#    - /var/ossec/logs/alerts/alerts.json
+#   prospector.scanner.check_interval: 1m
+#   parsers:
+#    - ndjson:
+#        keys_under_root: true
+
+filebeat.modules:
+  - module: wazuh
+    alerts:
+      enabled: true
+    archives:
+      enabled: false
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+logging.metrics.enabled: false
+
+seccomp:
+  default_action: allow
+  syscalls:
+  - action: allow
+    names:
+    - rseq
+
+#
+# You can define it for output testing but you must disable another output
+# configuration
+#
+#output.file:
+#  path: /var/log/filebeat/
+#  filename: filebeat-output.json
