@@ -3,7 +3,7 @@ INCLUDE options/options.makejail
 ARG server_ip=10.0.0.2
 ARG network=wazuh-net
 
-CMD sed -e "s,quarterly,latest,g" -i "" /etc/pkg/FreeBSD.conf
+CMD sed -e "s|quarterly|latest|g" -i.bak /etc/pkg/FreeBSD.conf
 
 PKG bash wazuh-indexer wazuh-server wazuh-dashboard
 
