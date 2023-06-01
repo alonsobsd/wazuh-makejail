@@ -12,37 +12,44 @@ Before you can install wazuh using this template you need some initial configura
 We need add somes lines to /etc/rc.conf
 
 ```sh
-# Enable pf(4):
-sysrc pf_enable="YES"
-sysrc pflog_enable="YES"
-# Put the anchors in pf.conf(5):
-cat << "EOF" >> /etc/pf.conf
+# sysrc pf_enable="YES"
+# sysrc pflog_enable="YES"
+
+# cat << "EOF" >> /etc/pf.conf
 nat-anchor 'appjail-nat/jail/*'
 nat-anchor "appjail-nat/network/*"
 rdr-anchor "appjail-rdr/*"
 EOF
-# Reload the pf(4) rules:
-service pf reload
-# Or reboot if you don't have pf(4) started:
-service pf restart
-service pflog restart
+# service pf reload
+# service pf restart
+# service pflog restart
 ```
 rdr-anchor section is necessary for use dynamic redirect from jails
 
+### Enable forwarding
+```sh
+# sysrc gateway_enable="YES"
+# sysctl net.inet.ip.forwarding=1
+```
 #### Bootstrap a FreeBSD version
-Before you can begin creating containers, AppJail needs to "bootstrap" a release. It must be a version equal or lesser than your host version. In this example we will create a 13.2-RELEASE bootstrap
+Before you can begin creating containers, AppJail needs fetch and extract components for create jails. If you are creating FreeBSD jails it must be a version equal or lesser than your host version. In this example we will create a 13.2-RELEASE bootstrap
 
 ```sh
 # appjail fetch
 ```
 #### Create a virtualnet
+Create a virtualnet for add wazuh jail to it from wazuh-makejail
 
 ```sh
 # appjail network add wazuh-net 10.0.0.0/24
 ```
+it will create a bridge named wazuh-net in where wazuh jail epair interfaces will be attached. By default wazuh-makejail will use NAT for internet outbound. Do not forget added a pass rule to /etc/pf.conf because wazuh-makefile  will try to download and install packages and some another resources for config wazuh services
 
+```sh
+pass out quick on wazuh-net inet proto { tcp udp } from 10.0.0.2 to any
+```
 #### Create a lightweight container system
-Create a container named wazuh with a private IP address 10.0.0.2
+Create a container named wazuh with a private IP address 10.0.0.2. Take on mind IP address must be part of wazuh-net network
 
 ```sh
 # appjail makejail -f gh+alonsobsd/wazuh-makejail -j wazuh -- --network wazuh-net --server_ip 10.0.0.2
