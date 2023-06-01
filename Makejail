@@ -34,9 +34,9 @@ CMD mkdir -p /usr/local/etc/opensearch-dashboards/certs/
 CMD mkdir -p /usr/local/etc/opensearch/certs/
 CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/wazuh-gen-certs.tar.gz"
 CMD cd /root/; tar xvfz wazuh-gen-certs.tar.gz
-CMD echo 'dashboard_ip="${_server_ip}"' > /root/wazuh-gen-certs/dashboard.lst
-CMD echo 'indexer1_ip="${_server_ip}"' > /root/wazuh-gen-certs/indexer.lst
-CMD echo 'server1_ip="${_server_ip}"' > /root/wazuh-gen-certs/server.lst
+CMD echo 'dashboard_ip="${server_ip}"' > /root/wazuh-gen-certs/dashboard.lst
+CMD echo 'indexer1_ip="${server_ip}"' > /root/wazuh-gen-certs/indexer.lst
+CMD echo 'server1_ip="${server_ip}"' > /root/wazuh-gen-certs/server.lst
 CMD cd /root/wazuh-gen-certs; echo y | sh gen-certs.sh
 
 CMD chmod 660 /var/ossec/etc/ossec.conf

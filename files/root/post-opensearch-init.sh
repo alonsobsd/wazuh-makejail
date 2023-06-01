@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 echo " "
-echo " Bootstrap starting ..."
+echo -e "\e[1;37m Generating admin password ...\e[0m"
 echo " "
 
 sleep 30
@@ -35,5 +35,5 @@ echo " "
 sleep 10
 
 echo " "
-echo " Bootstrap end ..."
+echo -e " \e[1;37m Password generated ...\e[0m"
 echo " "
