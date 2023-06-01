@@ -8,63 +8,44 @@ Wazuh-makejail is a [AppJail](https://github.com/DtxdF/AppJail) template (AppJai
 ## Requirements
 Before you can install wazuh using this template you need some initial configurations
 
-#### Create a loopback interface
-We can create it add some lines to /etc/rc.conf
-```sh
-# sysrc cloned_interfaces="lo1"
-# sysrc ifconfig_lo1_name="appjail0"
-# service netif cloneup
-```
 #### Enable Packet filter
 We need add somes lines to /etc/rc.conf
 
 ```sh
-# sysrc pf_enable="YES"
-```
-Edit /etc/pf.conf and modify like you want. Minimal working configuration could look at the following
-
-```sh
-ext_if="em0"
-lo_if="bastille0"
-
-set block-policy return
-scrub in on $ext_if all fragment reassemble
-set skip on lo
-
-table <jails> persist
-nat on $ext_if from <jails> to any -> ($ext_if:0)
-rdr-anchor "rdr/*"
-
-block in all
-pass out quick keep state
-antispoof for $ext_if inet
-pass in inet proto tcp from any to any port ssh flags S/SA keep state
-
-pass in quick on $ext_if inet proto { tcp udp } from any to any
-pass out quick on $ext_if inet proto { tcp udp } from any to any
-
-pass in quick on $lo_if inet proto { tcp udp } from any to any
-pass out quick on $lo_if inet proto { tcp udp } from any to any
+# Enable pf(4):
+sysrc pf_enable="YES"
+sysrc pflog_enable="YES"
+# Put the anchors in pf.conf(5):
+cat << "EOF" >> /etc/pf.conf
+nat-anchor 'appjail-nat/jail/*'
+nat-anchor "appjail-nat/network/*"
+rdr-anchor "appjail-rdr/*"
+EOF
+# Reload the pf(4) rules:
+service pf reload
+# Or reboot if you don't have pf(4) started:
+service pf restart
+service pflog restart
 ```
 rdr-anchor section is necessary for use dynamic redirect from jails
 
-Start packet filter
-
-```sh
-# service pf start
-```
 #### Bootstrap a FreeBSD version
 Before you can begin creating containers, AppJail needs to "bootstrap" a release. It must be a version equal or lesser than your host version. In this example we will create a 13.2-RELEASE bootstrap
 
 ```sh
-# appjail bootstrap 13.2-RELEASE
+# appjail fetch
 ```
+#### Create a virtualnet
+
+```sh
+# appjail network add wazuh-net 10.0.0.0/24
+```
+
 #### Create a lightweight container system
 Create a container named wazuh with a private IP address 10.0.0.2
 
 ```sh
 # appjail makejail -f gh+alonsobsd/wazuh-makejail -j wazuh -- --network wazuh-net --server_ip 10.0.0.2
-# appjail makejail -j wazuh -- --network wazuh-net --server_ip 10.0.0.2
 ```
 
 When it is done you will see credentials info for connect to wazuh-dashboards via web browser.
