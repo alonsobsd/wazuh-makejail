@@ -23,11 +23,18 @@ COPY files/root/pre-opensearch-init.sh /root/
 COPY files/root/post-opensearch-init.sh /root/
 
 REPLACE /usr/local/etc/beats/filebeat.yml SERVER_IP ${server_ip}
+CMD chown root:wheel /usr/local/etc/beats/filebeat.yml
 REPLACE /usr/local/etc/logstash/logstash.conf SERVER_IP ${server_ip}
+CMD chown root:wheel /usr/local/etc/logstash/logstash.conf
 REPLACE /usr/local/etc/opensearch/opensearch.yml SERVER_IP ${server_ip}
+CMD chown root:wheel /usr/local/etc/opensearch/opensearch.yml
 REPLACE /usr/local/etc/opensearch-dashboards/opensearch_dashboards.yml SERVER_IP ${server_ip}
+CMD chown root:wheel /usr/local/etc/opensearch-dashboards/opensearch_dashboards.yml
 REPLACE /etc/hosts SERVER_IP ${server_ip}
+CMD chown root:wheel /etc/hosts
 REPLACE /root/post-opensearch-init.sh SERVER_IP ${server_ip}
+CMD chown root:wheel /root/pre-opensearch-init.sh
+CMD chown root:wheel /root/post-opensearch-init.sh
 
 CMD sh /root/pre-opensearch-init.sh
 CMD rm /root/pre-opensearch-init.sh
