@@ -41,8 +41,8 @@ CMD rm /root/pre-opensearch-init.sh
 
 CMD mkdir -p /usr/local/etc/opensearch-dashboards/certs/
 CMD mkdir -p /usr/local/etc/opensearch/certs/
-CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/freebsd-logo.png
-CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/freebsd-mark-logo.png
+CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/freebsd-logo.png"
+CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/freebsd-mark-logo.png"
 CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/wazuh-gen-certs.tar.gz"
 CMD cd /root/; tar xvfz wazuh-gen-certs.tar.gz
 CMD echo "dashboard_ip=${server_ip}" > /root/wazuh-gen-certs/dashboard.lst
