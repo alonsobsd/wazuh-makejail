@@ -19,4 +19,17 @@ opensearch.requestHeadersWhitelist: [authorization, securitytenant]
 opensearch_security.multitenancy.enabled: false
 opensearch_security.readonly_mode.roles: [kibana_read_only]
 
+opensearchDashboards.branding:
+   logo:
+     defaultUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-logo.png"
+#     darkModeUrl: ""
+   mark:
+     defaultUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-mark-logo.png"
+#     darkModeUrl: ""
+   loadingLogo:
+     defaultUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-mark-logo.png"
+#     darkModeUrl: ""
+#   faviconUrl: ""
+   applicationTitle: "on FreeBSD"
+
 uiSettings.overrides.defaultRoute: /app/wazuh

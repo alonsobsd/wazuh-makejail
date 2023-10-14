@@ -5,7 +5,7 @@ ARG network=wazuh-net
 
 CMD sed -e "s|quarterly|latest|g" -i.bak /etc/pkg/FreeBSD.conf
 
-PKG bash wazuh-indexer wazuh-server wazuh-dashboard
+PKG bash wazuh-indexer wazuh-server wazuh-dashboard openjdk17
 
 CMD openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=California/CN=Wazuh/" -keyout /var/ossec/etc/sslmanager.key -out /var/ossec/etc/sslmanager.cert
 CMD chmod 640 /var/ossec/etc/sslmanager.key
@@ -41,6 +41,8 @@ CMD rm /root/pre-opensearch-init.sh
 
 CMD mkdir -p /usr/local/etc/opensearch-dashboards/certs/
 CMD mkdir -p /usr/local/etc/opensearch/certs/
+CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/freebsd-logo.png
+CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/freebsd-mark-logo.png
 CMD cd /root/; fetch "https://people.freebsd.org/~acm/ports/wazuh/wazuh-gen-certs.tar.gz"
 CMD cd /root/; tar xvfz wazuh-gen-certs.tar.gz
 CMD echo "dashboard_ip=${server_ip}" > /root/wazuh-gen-certs/dashboard.lst
@@ -76,6 +78,9 @@ CMD chown www:www /usr/local/etc/opensearch-dashboards/certs/dashboard-key.pem
 CMD cp /root/wazuh-gen-certs/wazuh-certificates/root-ca.pem /usr/local/etc/opensearch-dashboards/certs/
 CMD chmod 640 /usr/local/etc/opensearch-dashboards/certs/root-ca.pem
 CMD chown www:www /usr/local/etc/opensearch-dashboards/certs/root-ca.pem
+
+CMD cp /root/freebsd-logo.png /usr/local/www/opensearch-dashboards/src/core/server/core_app/assets/logos/
+CMD cp /root/freebsd-mark-logo.png /usr/local/www/opensearch-dashboards/src/core/server/core_app/assets/logos/
 
 SYSRC wazuh_manager_enable=YES
 SYSRC filebeat_enable=YES
