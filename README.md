@@ -62,7 +62,10 @@ When it is done you will see credentials info for connect to wazuh-dashboards vi
  Wazuh dashboard admin credentials                
  Hostname : https://jail-host-ip:5601/app/wazuh   
  Username : admin                                 
- Password : @hkXudpIp93xbIOvD                          
+ Password : @hkXudpIp93xbIOvD                        
+################################################
+ Wazuh agent enrollment password                
+ Password : @sXDudSIKJKfMTmCroHGvirVPE80=
 ################################################
  ```
 Keep it to another secure place
