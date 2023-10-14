@@ -89,6 +89,9 @@ SERVICE opensearch start
 CMD sh /root/post-opensearch-init.sh
 CMD rm /root/post-opensearch-init.sh
 
+CMD chmod 640 /var/ossec/etc/authd.pass
+CMD chown root:wazuh /var/ossec/etc/authd.pass
+
 SERVICE wazuh-manager start
 SERVICE filebeat start
 SERVICE logstash start
