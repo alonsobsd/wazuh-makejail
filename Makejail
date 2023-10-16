@@ -13,6 +13,13 @@ CMD chmod 640 /var/ossec/etc/sslmanager.cert
 
 CMD cp /etc/localtime /var/ossec/etc
 CMD cp /usr/local/etc/wazuh-server/wazuh-template.json /usr/local/etc/logstash/
+COPY files/var/ossec/etc/decoders/local_decoder.xml /var/ossec/etc/decoders/
+CMD chown wazuh:wazuh /var/ossec/etc/decoders/local_decoder.xml
+CMD chmod 660 /var/ossec/etc/decoders/local_decoder.xml
+COPY files/var/ossec/etc/rules/local_rules.xml /var/ossec/etc/rules/
+CMD chown wazuh:wazuh /var/ossec/etc/rules/local_rules.xml
+CMD chmod 660 /var/ossec/etc/rules/local_rules.xml
+COPY files/var/ossec/etc/ossec.conf /var/ossec/etc
 COPY files/var/ossec/etc/ossec.conf /var/ossec/etc
 COPY files/usr/local/etc/beats/filebeat.yml /usr/local/etc/beats/
 COPY files/usr/local/etc/logstash/logstash.conf /usr/local/etc/logstash/
