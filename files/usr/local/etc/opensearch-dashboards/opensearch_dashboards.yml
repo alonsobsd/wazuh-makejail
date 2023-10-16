@@ -21,14 +21,14 @@ opensearch_security.readonly_mode.roles: [kibana_read_only]
 
 opensearchDashboards.branding:
    logo:
-     defaultUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-logo.png"
-#     darkModeUrl: ""
+     defaultUrl: "https://people.freebsd.org/~acm/ports/wazuh/freebsd-logo.png"
+#     darkModeUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-logo.png"
    mark:
-     defaultUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-mark-logo.png"
-#     darkModeUrl: ""
+     defaultUrl: "https://people.freebsd.org/~acm/ports/wazuh/freebsd-mark-logo.png"
+#     darkModeUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-mark-logo.png"
    loadingLogo:
-     defaultUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-mark-logo.png"
-#     darkModeUrl: ""
+     defaultUrl: "https://people.freebsd.org/~acm/ports/wazuh/freebsd-mark-logo.png"
+#     darkModeUrl: "https://%{SERVER_IP}:5601/ui/logos/freebsd-mark-logo.png"
 #   faviconUrl: ""
    applicationTitle: "on FreeBSD"
 
