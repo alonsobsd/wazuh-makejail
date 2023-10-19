@@ -5,6 +5,8 @@ Wazuh-makejail is a [AppJail](https://github.com/DtxdF/AppJail) file ([AppJail-m
 
 ![image](https://github.com/alonsobsd/wazuh-makejail/assets/11150989/803ff835-1f67-4bc0-80c8-29029b9ffb03)
 
+![image](https://github.com/alonsobsd/wazuh-makejail/assets/11150989/81177117-fe9e-4398-b642-33f68e937109)
+
 ![image](https://github.com/alonsobsd/wazuh-makejail/assets/11150989/021abc67-cb5e-4527-92b3-ded75eef9dc6)
 
 ![image](https://github.com/alonsobsd/wazuh-makejail/assets/11150989/8f60b7a2-ddf8-4d08-8986-e2b9bd5cf0fc)
