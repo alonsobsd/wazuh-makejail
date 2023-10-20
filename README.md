@@ -1,5 +1,5 @@
 # wazuh-makejail
-Wazuh-makejail is a [AppJail](https://github.com/DtxdF/AppJail) file ([AppJail-makejail](https://github.com/AppJail-makejails)) used by deploy a testing [Wazuh](https://wazuh.com/) single-node infrastructure on [FreeBSD](https://freebsd.org/). The principal goals are helps us to fast way install, configure and run wazuh-indexer (opensearch), wazuh-manager, logstash, filebeat and wazuh-dashboards (opensearch-dashboards + wazuh-kibana-app). Take on mind this container as is must be used by testing/learning purpose and it is not recommended for production because it has a minimal configuration for run wazuh.
+Wazuh-makejail is a [AppJail](https://github.com/DtxdF/AppJail) file ([AppJail-makejail](https://github.com/AppJail-makejails)) used by deploy a testing [Wazuh](https://wazuh.com/) single-node infrastructure on [FreeBSD](https://freebsd.org/). The principal goals are helps us to fast way install, configure and run wazuh-indexer (opensearch), wazuh-manager, logstash, filebeat and wazuh-dashboards (opensearch-dashboards + wazuh-dashboard-plugins). Take on mind this container as is must be used by testing/learning purpose and it is not recommended for production because it has a minimal configuration for run wazuh.
 
 ![image](https://github.com/alonsobsd/wazuh-makejail/assets/11150989/8b33452f-9288-4215-981e-1350e468a4b8)
 
