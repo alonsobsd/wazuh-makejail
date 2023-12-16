@@ -5,7 +5,7 @@ ARG network=wazuh-net
 
 CMD sed -e "s|quarterly|latest|g" -i.bak /etc/pkg/FreeBSD.conf
 
-PKG bash wazuh-indexer wazuh-server wazuh-dashboard openjdk17
+PKG bash wazuh-indexer wazuh-server wazuh-dashboard openjdk17 git-tiny
 
 CMD openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=California/CN=Wazuh/" -keyout /var/ossec/etc/sslmanager.key -out /var/ossec/etc/sslmanager.cert
 CMD chmod 640 /var/ossec/etc/sslmanager.key
@@ -13,12 +13,22 @@ CMD chmod 640 /var/ossec/etc/sslmanager.cert
 
 CMD cp /etc/localtime /var/ossec/etc
 CMD cp /usr/local/etc/wazuh-server/wazuh-template.json /usr/local/etc/logstash/
-COPY files/var/ossec/etc/decoders/local_decoder.xml /var/ossec/etc/decoders/
-CMD chown wazuh:wazuh /var/ossec/etc/decoders/local_decoder.xml
-CMD chmod 660 /var/ossec/etc/decoders/local_decoder.xml
-COPY files/var/ossec/etc/rules/local_rules.xml /var/ossec/etc/rules/
-CMD chown wazuh:wazuh /var/ossec/etc/rules/local_rules.xml
-CMD chmod 660 /var/ossec/etc/rules/local_rules.xml
+
+CMD git clone https://github.com/alonsobsd/wazuh-freebsd.git /root/wazuh-freebsd
+CMD cp /root/wazuh-freebsd/var/ossec/ruleset/sca/cis_freebsd*.yml /var/ossec/ruleset/sca/
+CMD chmod 640 /var/ossec/ruleset/sca/cis_freebsd*.yml
+CMD chown root:wazuh /var/ossec/ruleset/sca/cis_freebsd*.yml
+CMD cp /root/wazuh-freebsd/var/ossec/ruleset/decoders/0600-freebsd_decoders.xml /var/ossec/ruleset/decoders/0600-freebsd_decoders.xml
+CMD chmod 640 /var/ossec/ruleset/decoders/0600-freebsd_decoders.xml
+CMD chown root:wazuh /var/ossec/ruleset/decoders/0600-freebsd_decoders.xml
+CMD cp /root/wazuh-freebsd/var/ossec/ruleset/rules/1000-freebsd_rules.xml /var/ossec/ruleset/rules/1000-freebsd_rules.xml
+CMD chmod 640 /var/ossec/ruleset/rules/1000-freebsd_rules.xml
+CMD chown root:wazuh /var/ossec/ruleset/rules/1000-freebsd_rules.xml
+
+CMD rm -rf /root/wazuh-freebsd
+PKG --remove git-tiny
+PKG --autoremove
+
 COPY files/var/ossec/etc/ossec.conf /var/ossec/etc
 COPY files/var/ossec/etc/ossec.conf /var/ossec/etc
 COPY files/usr/local/etc/beats/filebeat.yml /usr/local/etc/beats/
